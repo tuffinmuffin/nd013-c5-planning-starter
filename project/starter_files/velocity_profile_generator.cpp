@@ -362,8 +362,18 @@ double VelocityProfileGenerator::calc_distance(const double& v_i,
     // v_i (initial velocity) to v_f (final velocity) at a constant
     // acceleration/deceleration "a". HINT look at the description of this
     // function. Make sure you handle div by 0
-    d = 0;  // <- Update
+    // d = (v_f^2 - v_i^2) / (2 * a)
+    // see https://learn.udacity.com/nanodegrees/nd0013/parts/cd2694/lessons/4f3b3816-3b78-4219-8f95-b40610282833/concepts/17215706-3526-471d-88d3-a7425ba45c8f
+
+    // d = (v_f * v_f - v_i * v_i)) / (2 * a); // naive solution
+    if (std::abs(a) < DBL_EPSILON) {
+      d = std::numeric_limits<double>::infinity();
+    } 
+    else {
+      d = std::abs((v_f * v_f - v_i * v_i) / (2 * a));
+    }
   }
+
   return d;
 }
 
@@ -384,8 +394,8 @@ double VelocityProfileGenerator::calc_final_speed(const double& v_i,
   // description of this function. Make sure you handle negative discriminant
   // and make v_f = 0 in that case. If the discriminant is inf or nan return
   // infinity
-
-  double disc = 0;  // <- Fix this
+  // See // see https://learn.udacity.com/nanodegrees/nd0013/parts/cd2694/lessons/4f3b3816-3b78-4219-8f95-b40610282833/concepts/17215706-3526-471d-88d3-a7425ba45c8f
+  double disc = v_i * v_i + 2 * a * d; // fixed
   if (disc <= 0.0) {
     v_f = 0.0;
   } else if (disc == std::numeric_limits<double>::infinity() ||
